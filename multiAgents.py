@@ -1,4 +1,4 @@
-1# multiAgents.py
+# multiAgents.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -193,35 +193,25 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         def alphaBeta(gameState,agent,depth,alpha,beta):
             newList = []
-            if depth == self.depth:
-                return self.evaluationFunction(gameState),0
-            if not gameState.getLegalActions(agent):
-                return self.evaluationFunction(gameState),0
-            if agent == gameState.getNumAgents() - 1:
-                depth += 1
-            if agent == gameState.getNumAgents() - 1:
-                nextAgent = self.index
-            else:
-                nextAgent = agent + 1
             for action in gameState.getLegalActions(agent):
                 if not newList:
                     nextValue = alphaBeta(gameState.generateSuccessor(agent,action),nextAgent,depth,alpha,beta)
                     newList.append(nextValue[0])
                     newList.append(action)
-                    if agent == self.index:
+                    if agent is self.index:
                         if alpha < newList[0]:
                             alpha = newList[0]
                     else:
                         if beta > newList[0]:
                             beta = newList[0]
                 else:
-                    if newList[0] > beta and agent == self.index:
+                    if newList[0] > beta and agent is self.index:
                         return newList
                     if newList[0] < alpha and agent != self.index:
                         return newList
                     previousValue = newList[0]
                     nextValue = alphaBeta(gameState.generateSuccessor(agent,action),nextAgent,depth,alpha,beta)
-                    if agent == self.index:
+                    if agent is self.index:
                         if nextValue[0] > previousValue:
                             newList[0] = nextValue[0]
                             newList[1] = action
@@ -233,8 +223,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                             newList[1] = action
                             if beta > newList[0]:
                                 beta = newList[0]
-            return newList
-        return alphaBeta(gameState,self.index,0,-9999.0,9999.0)[1]
+            return alphaBeta(gameState,self.index,0,alpha,beta)
         util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
@@ -299,7 +288,8 @@ def betterEvaluationFunction(currentGameState):
     Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
     evaluation function (question 5).
 
-    DESCRIPTION: <write something here so we know what you did>
+    DESCRIPTION: looking for the closest food pellet and checking to see if a ghost is on top of your location
+    if so returns -9999
     """
     "*** YOUR CODE HERE ***"
     newPos = currentGameState.getPacmanPosition()
